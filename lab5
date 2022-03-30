@@ -1,0 +1,35 @@
+import os
+import hashlib
+from pytest import skip
+from datetime import datetime
+
+listyUnable = []
+listyAble = []
+filer2 = open ("text.txt", "w")
+for root, directories, files in os.walk ("/"):
+        for dir in directories:
+            val = os.path.join(root, dir)
+            if "dev" in val or "proc" in val or "run" in val or "sys" in val or "tmp" in val or "var/lib" in val or "var/run" in val:
+                skip
+            else:
+                for fil in files:
+                    new = os.path.join(root, fil)
+                    try:
+                        filer = open(new, "rb")
+                        hasher = hashlib.sha256()
+                        hasher.update(filer.read())
+                        x = hasher.hexdigest()
+                        x = x + "\n"
+                        listyAble.append(x)
+                    except:
+                        listyUnable.append(new)
+    
+filer2.write(listyAble)
+filer2.write(listyUnable)
+filer2.close()
+
+
+
+#   sources:
+#   https://pythonprogramming.altervista.org/find-all-the-files-on-your-computer/
+            
